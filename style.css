@@ -1,0 +1,97 @@
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      min-height: 100vh;
+    }
+    .card-shadow {
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s ease;
+    }
+    .card-shadow:hover {
+      transform: translateY(-5px);
+    }
+    .gradient-bg {
+      background: linear-gradient(to right, #4f6df5, #3a56d5);
+    }
+    .gradient-bg-2 {
+      background: linear-gradient(to right, #38b2ac, #319795);
+    }
+    .grade-O { background-color: #10b981; }
+    .grade-Ap { background-color: #34d399; }
+    .grade-A { background-color: #60a5fa; }
+    .grade-Bp { background-color: #8b5cf6; }
+    .grade-B { background-color: #f59e0b; }
+    .grade-C { background-color: #f97316; }
+    .grade-D { background-color: #ef4444; }
+    .grade-F { background-color: #7c3aed; }
+    .grade-others { background-color: #6b7280; }
+    
+    /* Mobile-specific adjustments */
+    @media (max-width: 640px) {
+      .mobile-stack {
+        flex-direction: column;
+        align-items: flex-start !important;
+      }
+      .mobile-full-width {
+        width: 100%;
+      }
+      .mobile-text-center {
+        text-align: center;
+      }
+      .mobile-p-3 {
+        padding: 0.75rem;
+      }
+      .mobile-mb-2 {
+        margin-bottom: 0.5rem;
+      }
+      .mobile-mt-2 {
+        margin-top: 0.5rem;
+      }
+      .mobile-text-sm {
+        font-size: 0.875rem;
+      }
+      .mobile-text-xs {
+        font-size: 0.75rem;
+      }
+      .mobile-space-y-2 > * + * {
+        margin-top: 0.5rem;
+      }
+    }
+    
+    /* Tablet adjustments */
+    @media (min-width: 641px) and (max-width: 1024px) {
+      .tablet-grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+      .tablet-text-lg {
+        font-size: 1.125rem;
+      }
+    }
+    
+    /* Prevent horizontal scrolling on mobile */
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    
+    /* Responsive table container */
+    .table-container {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Responsive button group */
+    @media (max-width: 480px) {
+      .button-group-responsive {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .button-group-responsive button {
+        width: 100%;
+      }
+    }
