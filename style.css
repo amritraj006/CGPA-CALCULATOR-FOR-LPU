@@ -1,82 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CGPA Calculator - Marks Based</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+</head>
+<body class="bg-gray-50 p-4">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <header class="mb-6">
+      <div class="text-center">
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-2">LPU TGPA/CGPA Calculator</h1>
+        <p class="text-gray-600">Enter your marks and credits to calculate CGPA automatically</p>
+      </div>
+    </header>
 
-    .gradient-bg {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-    .gradient-bg-2 {
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    }
-    .gradient-bg-3 {
-      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    }
-    .card-shadow {
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    }
-    .grade-O { background-color: #10b981; }
-    .grade-Ap { background-color: #34d399; }
-    .grade-A { background-color: #60a5fa; }
-    .grade-Bp { background-color: #8b5cf6; }
-    .grade-B { background-color: #f59e0b; }
-    .grade-C { background-color: #f97316; }
-    .grade-D { background-color: #ef4444; }
-    .grade-F { background-color: #6b7280; }
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Left Column: Controls and Input -->
+      <div class="lg:col-span-2">
+        <div class="bg-white rounded-xl card-shadow p-6 mb-6">
+          <div class="mb-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start mb-4">
+              <div class="mb-4 sm:mb-0">
+                <h2 class="text-2xl font-bold text-gray-800 mb-1">Academic Semesters</h2>
+                <p class="text-gray-600">Add semesters and input subject marks (0-100)</p>
+              </div>
+              <div class="flex items-center">
+                <label for="semesterCount" class="font-semibold text-gray-700 mr-3">Semesters:</label>
+                <div class="flex">
+                  <input type="number" id="semesterCount" min="1" max="8" value="1" 
+                         class="border rounded-l-lg px-3 py-2 w-20 text-center focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <button id="generateSem" class="gradient-bg text-white px-4 py-2 rounded-r-lg hover:opacity-90 transition-all">
+                    <i class="fas fa-plus mr-2"></i>Generate
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Grading System Reference -->
+            <div class="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg">
+              <h3 class="font-bold text-gray-800 mb-3 text-lg">Grading System (Marks to Grade Points)</h3>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div class="bg-green-50 p-3 rounded-lg border border-green-200">
+                  <div class="font-bold text-green-800">90-100: O (10)</div>
+                  <div class="text-green-700 text-sm">Outstanding</div>
+                </div>
+                <div class="bg-blue-50 p-3 rounded-lg border border-blue-200">
+                  <div class="font-bold text-blue-800">80-89: A+ (9)</div>
+                  <div class="text-blue-700 text-sm">Excellent</div>
+                </div>
+                <div class="bg-indigo-50 p-3 rounded-lg border border-indigo-200">
+                  <div class="font-bold text-indigo-800">70-79: A (8)</div>
+                  <div class="text-indigo-700 text-sm">Very Good</div>
+                </div>
+                <div class="bg-purple-50 p-3 rounded-lg border border-purple-200">
+                  <div class="font-bold text-purple-800">60-69: B+ (7)</div>
+                  <div class="text-purple-700 text-sm">Good</div>
+                </div>
+                <div class="bg-yellow-50 p-3 rounded-lg border border-yellow-200">
+                  <div class="font-bold text-yellow-800">50-59: B (6)</div>
+                  <div class="text-yellow-700 text-sm">Above Average</div>
+                </div>
+                <div class="bg-orange-50 p-3 rounded-lg border border-orange-200">
+                  <div class="font-bold text-orange-800">45-49: C (5)</div>
+                  <div class="text-orange-700 text-sm">Average</div>
+                </div>
+                <div class="bg-red-50 p-3 rounded-lg border border-red-200">
+                  <div class="font-bold text-red-800">40-44: D (4)</div>
+                  <div class="text-red-700 text-sm">Pass</div>
+                </div>
+                <div class="bg-gray-100 p-3 rounded-lg border border-gray-300">
+                  <div class="font-bold text-gray-800">Below 40: F (0)</div>
+                  <div class="text-gray-700 text-sm">Fail</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <form id="cgpaForm">
+            <div id="semestersContainer" class="space-y-6"></div>
+
+            <div class="mt-8 text-center flex flex-col sm:flex-row justify-center gap-4">
+              <button type="button" id="calculateBtn" class="gradient-bg-2 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:opacity-90 transition-all hover:-translate-y-1">
+                <i class="fas fa-calculator mr-2"></i>Calculate CGPA
+              </button>
+              <button type="button" id="resetBtn" class="bg-gray-200 text-gray-800 px-8 py-3 rounded-lg text-lg font-semibold hover:bg-gray-300 transition-all">
+                <i class="fas fa-redo mr-2"></i>Reset All
+              </button>
+            </div>
+          </form>
+        </div>
+        
+        <!-- Results Section -->
+        <div class="bg-white rounded-xl card-shadow p-6">
+          <div id="result">
+            <div class="text-center py-8">
+              <i class="fas fa-calculator text-5xl text-gray-300 mb-4"></i>
+              <p class="text-gray-500 text-lg">Enter your marks and click "Calculate CGPA" to see results</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Visualizations -->
+      <div class="lg:col-span-1">
+        <div class="bg-white rounded-xl card-shadow p-6 mb-6">
+          <h2 class="text-2xl font-bold text-gray-800 mb-4">CGPA Progress</h2>
+          <div class="h-64">
+            <canvas id="cgpaChart"></canvas>
+          </div>
+          <p class="text-gray-600 text-sm mt-4 text-center">Your semester-wise performance trend</p>
+        </div>
+        
+        <div class="bg-white rounded-xl card-shadow p-6 mb-6">
+          <h2 class="text-2xl font-bold text-gray-800 mb-4">Grade Distribution</h2>
+          <div class="h-64">
+            <canvas id="gradeChart"></canvas>
+          </div>
+          <p class="text-gray-600 text-sm mt-4 text-center">Distribution of grades across subjects</p>
+        </div>
+        
+        <div class="bg-white rounded-xl card-shadow p-6">
+          <h2 class="text-2xl font-bold text-gray-800 mb-4">Academic Summary</h2>
+          <div id="summaryStats" class="space-y-4">
+            <div class="text-center p-4 bg-blue-50 rounded-lg">
+              <p class="text-sm text-gray-600">Total Credits</p>
+              <p class="text-3xl font-bold text-blue-600" id="totalCredits">0</p>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="text-center p-4 bg-green-50 rounded-lg">
+                <p class="text-sm text-gray-600">Highest TGPA</p>
+                <p class="text-2xl font-bold text-green-600" id="highestTgpa">0.00</p>
+              </div>
+              <div class="text-center p-4 bg-red-50 rounded-lg">
+                <p class="text-sm text-gray-600">Lowest TGPA</p>
+                <p class="text-2xl font-bold text-red-600" id="lowestTgpa">0.00</p>
+              </div>
+            </div>
+            <div class="text-center p-4 bg-purple-50 rounded-lg">
+              <p class="text-sm text-gray-600">Total Subjects</p>
+              <p class="text-2xl font-bold text-purple-600" id="totalSubjects">0</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     
-    /* Responsive adjustments */
-    @media (max-width: 640px) {
-      .mobile-stack {
-        flex-direction: column;
-      }
-      .mobile-mb-2 {
-        margin-bottom: 0.5rem;
-      }
-      .mobile-mt-2 {
-        margin-top: 0.5rem;
-      }
-      .mobile-full-width {
-        width: 100%;
-      }
-      .mobile-text-center {
-        text-align: center;
-      }
-      .button-group-responsive {
-        gap: 0.75rem;
-      }
-    }
-    
-    /* Hide scrollbar but keep functionality */
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-    
-    /* Animation for results */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .fade-in {
-      animation: fadeIn 0.5s ease-out;
-    }
-    
-    /* Custom styles for inputs */
-    input:focus, select:focus {
-      outline: none;
-      ring: 2px;
-    }
-    
-    /* Loading animation */
-    .loader {
-      border: 3px solid #f3f3f3;
-      border-top: 3px solid #667eea;
-      border-radius: 50%;
-      width: 30px;
-      height: 30px;
-      animation: spin 1s linear infinite;
-      display: inline-block;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
+    <!-- Footer -->
+    <footer class="mt-8 text-center text-gray-600 text-sm">
+      <p>CGPA Calculator v3.0 | Enter marks (0-100) and credits | Grades are calculated automatically</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
