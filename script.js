@@ -3,28 +3,30 @@
 // Function to convert marks to grade points
 function getGradePointFromMarks(marks) {
   marks = parseFloat(marks) || 0;
-  if (marks >= 90 && marks <= 100) return 10;
-  else if (marks >= 80 && marks <= 89) return 9;
-  else if (marks >= 70 && marks <= 79) return 8;
-  else if (marks >= 60 && marks <= 69) return 7;
-  else if (marks >= 50 && marks <= 59) return 6;
-  else if (marks >= 45 && marks <= 49) return 5;
-  else if (marks >= 40 && marks <= 44) return 4;
-  else return 0; // Below 40
+
+  if (marks > 89) return 10;       // 89.1+ → O
+  else if (marks > 79) return 9;   // 79.1+ → A+
+  else if (marks > 69) return 8;
+  else if (marks > 59) return 7;
+  else if (marks > 49) return 6;
+  else if (marks > 44) return 5;
+  else if (marks >= 40) return 4;
+  else return 0;
 }
 
-// Function to convert marks to grade letter
 function getGradeLetterFromMarks(marks) {
   marks = parseFloat(marks) || 0;
-  if (marks >= 90 && marks <= 100) return "O";
-  else if (marks >= 80 && marks <= 89) return "A+";
-  else if (marks >= 70 && marks <= 79) return "A";
-  else if (marks >= 60 && marks <= 69) return "B+";
-  else if (marks >= 50 && marks <= 59) return "B";
-  else if (marks >= 45 && marks <= 49) return "C";
-  else if (marks >= 40 && marks <= 44) return "D";
-  else return "F"; // Below 40
+
+  if (marks > 89) return "O";      // 89.1+ → O
+  else if (marks > 79) return "A+";
+  else if (marks > 69) return "A";
+  else if (marks > 59) return "B+";
+  else if (marks > 49) return "B";
+  else if (marks > 44) return "C";
+  else if (marks >= 40) return "D";
+  else return "F";
 }
+
 
 // Chart instances
 let cgpaChart = null;
