@@ -1,16 +1,107 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CGPA Calculator - Marks Based</title>
+    <title>LPU CGPA Calculator</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        safelist: [
+          'bg-emerald-500', 'bg-blue-600', 'bg-indigo-600', 'bg-violet-600',
+          'bg-yellow-600', 'bg-orange-600', 'bg-red-600', 'bg-slate-500'
+        ],
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              display: ['Outfit', 'sans-serif'],
+            },
+            colors: {
+              glass: {
+                DEFAULT: 'rgba(255, 255, 255, 0.03)',
+                panel: 'rgba(15, 23, 42, 0.4)',
+                border: 'rgba(255, 255, 255, 0.08)',
+                highlight: 'rgba(255, 255, 255, 0.1)',
+              },
+            },
+            animation: {
+              'blob': 'blob 7s infinite',
+            },
+            keyframes: {
+              blob: {
+                '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                '100%': { transform: 'translate(0px, 0px) scale(1)' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style type="text/tailwindcss">
+      @layer components {
+        .glass-panel {
+          @apply bg-slate-900/40 backdrop-blur-xl border border-white/10 shadow-2xl;
+        }
+        .glass-card {
+          @apply bg-slate-800/40 backdrop-blur-lg border border-white/5 shadow-xl transition-all duration-300;
+        }
+        .glass-input {
+          @apply bg-slate-900/50 border border-white/10 text-slate-100 placeholder-slate-400 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all;
+        }
+        .surface-card {
+          @apply glass-panel rounded-2xl;
+        }
+        .summary-panel {
+          @apply glass-card rounded-xl p-4 text-center;
+        }
+        .gradient-bg {
+          @apply bg-gradient-to-br from-blue-600 to-indigo-700 hover:from-blue-500 hover:to-indigo-600 border border-blue-400/20 shadow-[0_0_15px_rgba(59,130,246,0.3)];
+        }
+        .gradient-bg-2 {
+          @apply bg-gradient-to-br from-rose-600 to-pink-700 hover:from-rose-500 hover:to-pink-600 border border-rose-400/20 shadow-[0_0_15px_rgba(225,29,72,0.3)];
+        }
+        .gradient-bg-3 {
+          @apply bg-gradient-to-br from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 border border-emerald-400/20 shadow-[0_0_15px_rgba(16,185,129,0.3)];
+        }
+        .grade-O { @apply bg-emerald-500/20 text-emerald-400 border border-emerald-500/30; }
+        .grade-Ap { @apply bg-teal-500/20 text-teal-400 border border-teal-500/30; }
+        .grade-A { @apply bg-blue-500/20 text-blue-400 border border-blue-500/30; }
+        .grade-Bp { @apply bg-indigo-500/20 text-indigo-400 border border-indigo-500/30; }
+        .grade-B { @apply bg-purple-500/20 text-purple-400 border border-purple-500/30; }
+        .grade-C { @apply bg-fuchsia-500/20 text-fuchsia-400 border border-fuchsia-500/30; }
+        .grade-D { @apply bg-rose-500/20 text-rose-400 border border-rose-500/30; }
+        .grade-E { @apply bg-slate-500/20 text-slate-400 border border-slate-500/30; }
+      }
+      @layer base {
+        ::-webkit-scrollbar-track {
+          @apply bg-slate-900/50;
+        }
+        ::-webkit-scrollbar-thumb {
+          @apply bg-slate-700 rounded-full;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+          @apply bg-slate-600;
+        }
+      }
+    </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   </head>
-  <body class="bg-gray-50 p-4">
+  <body class="text-slate-200 antialiased bg-slate-950 p-2 sm:p-4 min-h-screen relative overflow-x-hidden selection:bg-blue-500/30">
+    <!-- Animated Background Blobs -->
+    <div class="fixed inset-0 -z-10 w-full h-full bg-slate-950">
+      <div class="absolute top-0 -left-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob"></div>
+      <div class="absolute top-0 -right-4 w-72 h-72 bg-blue-500 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob animation-delay-2000"></div>
+      <div class="absolute -bottom-8 left-20 w-72 h-72 bg-emerald-500 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob animation-delay-4000"></div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

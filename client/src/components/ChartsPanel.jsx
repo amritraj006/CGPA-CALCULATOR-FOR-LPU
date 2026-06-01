@@ -11,6 +11,10 @@ export default function ChartsPanel({ calculation }) {
   useEffect(() => {
     if (!window.Chart || !cgpaCanvasRef.current || !gradeCanvasRef.current) return
 
+    // Update global defaults for dark mode
+    window.Chart.defaults.color = 'rgba(255, 255, 255, 0.7)'
+    window.Chart.defaults.font.family = 'Inter, sans-serif'
+
     cgpaChartRef.current = new window.Chart(cgpaCanvasRef.current.getContext("2d"), {
       type: "line",
       data: {
@@ -19,12 +23,14 @@ export default function ChartsPanel({ calculation }) {
           {
             label: "TGPA",
             data: [],
-            borderColor: "#3a56d5",
-            backgroundColor: "rgba(58, 86, 213, 0.1)",
+            borderColor: "#60a5fa", // blue-400
+            backgroundColor: "rgba(96, 165, 250, 0.15)",
             borderWidth: 3,
             fill: true,
             tension: 0.4,
-            pointBackgroundColor: "#3a56d5",
+            pointBackgroundColor: "#3b82f6", // blue-500
+            pointBorderColor: "#ffffff",
+            pointBorderWidth: 2,
             pointRadius: 6,
             pointHoverRadius: 8,
           },
@@ -38,23 +44,29 @@ export default function ChartsPanel({ calculation }) {
             beginAtZero: true,
             max: 10,
             grid: {
-              color: "rgba(0,0,0,0.05)",
+              color: "rgba(255, 255, 255, 0.05)",
             },
             ticks: {
               stepSize: 2,
+              color: "rgba(255, 255, 255, 0.6)",
             },
             title: {
               display: true,
               text: "TGPA Score",
+              color: "rgba(255, 255, 255, 0.8)",
             },
           },
           x: {
             grid: {
-              color: "rgba(0,0,0,0.05)",
+              color: "rgba(255, 255, 255, 0.05)",
+            },
+            ticks: {
+              color: "rgba(255, 255, 255, 0.6)",
             },
             title: {
               display: true,
               text: "Semester",
+              color: "rgba(255, 255, 255, 0.8)",
             },
           },
         },
@@ -65,6 +77,12 @@ export default function ChartsPanel({ calculation }) {
           tooltip: {
             mode: "index",
             intersect: false,
+            backgroundColor: "rgba(15, 23, 42, 0.9)",
+            titleColor: "#ffffff",
+            bodyColor: "#ffffff",
+            borderColor: "rgba(255, 255, 255, 0.1)",
+            borderWidth: 1,
+            padding: 10,
           },
         },
       },
@@ -79,7 +97,7 @@ export default function ChartsPanel({ calculation }) {
             data: new Array(8).fill(0),
             backgroundColor: gradeChartColors,
             borderWidth: 2,
-            borderColor: "#fff",
+            borderColor: "#0f172a", // slate-900 to blend with background
             hoverOffset: 15,
           },
         ],
@@ -94,12 +112,19 @@ export default function ChartsPanel({ calculation }) {
               padding: 20,
               usePointStyle: true,
               pointStyle: "circle",
+              color: "rgba(255, 255, 255, 0.8)",
               font: {
                 size: 11,
               },
             },
           },
           tooltip: {
+            backgroundColor: "rgba(15, 23, 42, 0.9)",
+            titleColor: "#ffffff",
+            bodyColor: "#ffffff",
+            borderColor: "rgba(255, 255, 255, 0.1)",
+            borderWidth: 1,
+            padding: 10,
             callbacks: {
               label(context) {
                 let label = context.label || ""
@@ -144,49 +169,58 @@ export default function ChartsPanel({ calculation }) {
   const lowestTgpa = tgpas.length > 0 ? Math.min(...tgpas).toFixed(2) : "0.00"
 
   return (
-    <div className="lg:col-span-1">
-      <div className="bg-white rounded-xl card-shadow p-6 mb-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">CGPA Progress</h2>
+    <div className="space-y-8">
+      <div className="surface-card p-6 sm:p-8">
+        <h2 className="text-2xl font-bold text-white mb-2 font-display flex items-center gap-2">
+          <i className="fas fa-chart-line text-blue-400"></i>
+          CGPA Progress
+        </h2>
+        <p className="text-slate-400 text-sm mb-6">Your semester-wise performance trend</p>
         <div className="h-64">
           <canvas ref={cgpaCanvasRef} id="cgpaChart" />
         </div>
-        <p className="text-gray-600 text-sm mt-4 text-center">Your semester-wise performance trend</p>
       </div>
 
-      <div className="bg-white rounded-xl card-shadow p-6 mb-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">Grade Distribution</h2>
+      <div className="surface-card p-6 sm:p-8">
+        <h2 className="text-2xl font-bold text-white mb-2 font-display flex items-center gap-2">
+          <i className="fas fa-chart-pie text-purple-400"></i>
+          Grade Distribution
+        </h2>
+        <p className="text-slate-400 text-sm mb-6">Distribution of grades across subjects</p>
         <div className="h-64">
           <canvas ref={gradeCanvasRef} id="gradeChart" />
         </div>
-        <p className="text-gray-600 text-sm mt-4 text-center">Distribution of grades across subjects</p>
       </div>
 
-      <div className="bg-white rounded-xl card-shadow p-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">Academic Summary</h2>
+      <div className="surface-card p-6 sm:p-8">
+        <h2 className="text-2xl font-bold text-white mb-6 font-display flex items-center gap-2">
+          <i className="fas fa-bolt text-amber-400"></i>
+          Academic Summary
+        </h2>
         <div id="summaryStats" className="space-y-4">
-          <div className="text-center p-4 bg-blue-50 rounded-lg">
-            <p className="text-sm text-gray-600">Total Credits</p>
-            <p className="text-3xl font-bold text-blue-600" id="totalCredits">
+          <div className="summary-panel bg-blue-500/10 border-blue-500/20 hover:bg-blue-500/20">
+            <p className="text-xs font-bold tracking-widest uppercase text-blue-300/80 mb-1">Total Credits</p>
+            <p className="text-4xl font-bold text-blue-400 font-display" id="totalCredits">
               {totalCredits}
             </p>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <div className="text-center p-4 bg-green-50 rounded-lg">
-              <p className="text-sm text-gray-600">Highest TGPA</p>
-              <p className="text-2xl font-bold text-green-600" id="highestTgpa">
+            <div className="summary-panel bg-emerald-500/10 border-emerald-500/20 hover:bg-emerald-500/20">
+              <p className="text-xs font-bold tracking-widest uppercase text-emerald-300/80 mb-1">Highest TGPA</p>
+              <p className="text-3xl font-bold text-emerald-400 font-display" id="highestTgpa">
                 {highestTgpa}
               </p>
             </div>
-            <div className="text-center p-4 bg-red-50 rounded-lg">
-              <p className="text-sm text-gray-600">Lowest TGPA</p>
-              <p className="text-2xl font-bold text-red-600" id="lowestTgpa">
+            <div className="summary-panel bg-rose-500/10 border-rose-500/20 hover:bg-rose-500/20">
+              <p className="text-xs font-bold tracking-widest uppercase text-rose-300/80 mb-1">Lowest TGPA</p>
+              <p className="text-3xl font-bold text-rose-400 font-display" id="lowestTgpa">
                 {lowestTgpa}
               </p>
             </div>
           </div>
-          <div className="text-center p-4 bg-purple-50 rounded-lg">
-            <p className="text-sm text-gray-600">Total Subjects</p>
-            <p className="text-2xl font-bold text-purple-600" id="totalSubjects">
+          <div className="summary-panel bg-purple-500/10 border-purple-500/20 hover:bg-purple-500/20">
+            <p className="text-xs font-bold tracking-widest uppercase text-purple-300/80 mb-1">Total Subjects</p>
+            <p className="text-4xl font-bold text-purple-400 font-display" id="totalSubjects">
               {totalSubjects}
             </p>
           </div>

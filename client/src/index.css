@@ -1,116 +1,46 @@
 body {
-  font-family: "Poppins", sans-serif;
+  /* Background handled by HTML class */
+  color: #f8fafc;
 }
 
-.gradient-bg {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Outfit', sans-serif;
 }
 
-.gradient-bg-2 {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
-.gradient-bg-3 {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-}
-
-.card-shadow {
-  box-shadow:
-    0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 2px 4px -1px rgba(0, 0, 0, 0.06);
-}
-
-.grade-O {
-  background-color: #10b981;
-}
-
-.grade-Ap {
-  background-color: #34d399;
-}
-
-.grade-A {
-  background-color: #60a5fa;
-}
-
-.grade-Bp {
-  background-color: #8b5cf6;
-}
-
-.grade-B {
-  background-color: #f59e0b;
-}
-
-.grade-C {
-  background-color: #f97316;
-}
-
-.grade-D {
-  background-color: #ef4444;
-}
-
-.grade-F {
-  background-color: #6b7280;
-}
-
-@media (max-width: 640px) {
-  .mobile-stack {
-    flex-direction: column;
-  }
-
-  .mobile-mb-2 {
-    margin-bottom: 0.5rem;
-  }
-
-  .mobile-mt-2 {
-    margin-top: 0.5rem;
-  }
-
-  .mobile-full-width {
-    width: 100%;
-  }
-
-  .mobile-text-center {
-    text-align: center;
-  }
-
-  .button-group-responsive {
-    gap: 0.75rem;
-  }
-}
-
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
+/* Animations */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .fade-in {
-  animation: fadeIn 0.5s ease-out;
+  animation: fadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-input:focus,
-select:focus {
-  outline: none;
+.animation-delay-2000 {
+  animation-delay: 2s;
 }
 
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* Scrollbar styling for dark mode */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+/* Loader */
 .loader {
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #667eea;
+  border: 3px solid rgba(255,255,255,0.1);
+  border-top: 3px solid #3b82f6;
   border-radius: 50%;
   width: 30px;
   height: 30px;
@@ -119,11 +49,6 @@ select:focus {
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
