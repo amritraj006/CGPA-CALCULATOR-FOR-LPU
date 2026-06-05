@@ -1,5 +1,4 @@
 import { useState } from "react"
-
 import ChartsPanel from "./components/ChartsPanel"
 import GradingReference from "./components/GradingReference"
 import Results from "./components/Results"
