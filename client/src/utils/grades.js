@@ -161,7 +161,7 @@ export function getSubjectGradeData(subject) {
   }
 
   const marks = parseFloat(subject.marks) || 0
-  const hasValidData = credit > 0 && marks > 0
+  const hasValidData = credit > 0 && subject.marks !== "" && !isNaN(marks) && marks >= 0
   const grade = hasValidData ? getGradeLetterFromMarks(marks) : ""
 
   return {

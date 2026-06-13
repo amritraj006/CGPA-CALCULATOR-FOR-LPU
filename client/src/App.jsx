@@ -1,6 +1,6 @@
 import { useState } from "react"
 import ChartsPanel from "./components/ChartsPanel"
-import GradingReference from "./components/GradingReference"
+
 import Results from "./components/Results"
 import SemesterCard from "./components/SemesterCard"
 import { getSubjectGradeData, gradeLetters } from "./utils/grades"
@@ -9,22 +9,22 @@ function clampNumber(value, min, max) {
   return Math.min(Math.max(parseInt(value) || min, min), max)
 }
 
-function createSubjects(count) {
+function createSubjects(count, entryMode = "marks") {
   return Array.from({ length: count }, (_, index) => ({
     id: `${Date.now()}-${index + 1}-${Math.random().toString(36).slice(2)}`,
     name: `Subject ${index + 1}`,
     credits: "",
     marks: "",
     grade: "",
-    entryMode: "marks",
+    entryMode,
   }))
 }
 
-function createSemesters(count) {
+function createSemesters(count, entryMode = "marks") {
   return Array.from({ length: count }, (_, index) => ({
     id: `semester-${Date.now()}-${index + 1}-${Math.random().toString(36).slice(2)}`,
     subjectCount: "1",
-    subjects: createSubjects(1),
+    subjects: createSubjects(1, entryMode),
   }))
 }
 
@@ -86,7 +86,8 @@ function buildCalculation(semesters) {
 
 export default function App() {
   const [semesterCount, setSemesterCount] = useState("1")
-  const [semesters, setSemesters] = useState(() => createSemesters(1))
+  const [entryMode, setEntryMode] = useState("marks")
+  const [semesters, setSemesters] = useState(() => createSemesters(1, "marks"))
   const [calculation, setCalculation] = useState(null)
   const [toast, setToast] = useState({ show: false, message: "", type: "success" })
 
@@ -94,13 +95,27 @@ export default function App() {
     setToast({ show: true, message, type })
     setTimeout(() => {
       setToast((prev) => ({ ...prev, show: false }))
-    }, 2000)
+    }, 2500)
+  }
+
+  function handleEntryModeChange(mode) {
+    setEntryMode(mode)
+    setSemesters((currentSemesters) =>
+      currentSemesters.map((semester) => ({
+        ...semester,
+        subjects: semester.subjects.map((subject) => ({
+          ...subject,
+          entryMode: mode,
+        })),
+      })),
+    )
+    showToast(`Switched to: Evaluate by ${mode === "marks" ? "Marks" : "Grade"}`, "info")
   }
 
   function handleGenerateSemesters() {
     const count = clampNumber(semesterCount, 1, 8)
     setSemesterCount(String(count))
-    setSemesters(createSemesters(count))
+    setSemesters(createSemesters(count, entryMode))
     showToast(`Set to ${count} semester(s)`, "info")
   }
 
@@ -121,7 +136,7 @@ export default function App() {
         return {
           ...semester,
           subjectCount: String(subjectCount),
-          subjects: createSubjects(subjectCount),
+          subjects: createSubjects(subjectCount, entryMode),
         }
       }),
     )
@@ -144,13 +159,58 @@ export default function App() {
   }
 
   function handleCalculate() {
+    let isValid = true
+    let missingField = ""
+
+    for (let s = 0; s < semesters.length; s++) {
+      const semester = semesters[s]
+      for (let j = 0; j < semester.subjects.length; j++) {
+        const subject = semester.subjects[j]
+        const subjectName = subject.name || `Subject ${j + 1}`
+
+        const creditsVal = parseFloat(subject.credits)
+        if (isNaN(creditsVal) || creditsVal <= 0) {
+          isValid = false
+          missingField = `Please enter a valid credit (greater than 0) for ${subjectName} in Semester ${s + 1}.`
+          break
+        }
+
+        if (entryMode === "marks") {
+          if (subject.marks === "" || subject.marks === null || subject.marks === undefined) {
+            isValid = false
+            missingField = `Please enter marks for ${subjectName} in Semester ${s + 1}.`
+            break
+          }
+          const marksVal = parseFloat(subject.marks)
+          if (isNaN(marksVal) || marksVal < 0 || marksVal > 100) {
+            isValid = false
+            missingField = `Please enter valid marks (0-100) for ${subjectName} in Semester ${s + 1}.`
+            break
+          }
+        } else {
+          if (!subject.grade) {
+            isValid = false
+            missingField = `Please select an expected grade for ${subjectName} in Semester ${s + 1}.`
+            break
+          }
+        }
+      }
+      if (!isValid) break
+    }
+
+    if (!isValid) {
+      showToast(missingField, "error")
+      return
+    }
+
     setCalculation(buildCalculation(semesters))
     showToast("CGPA Calculated successfully!", "success")
   }
 
   function handleReset() {
     setSemesterCount("1")
-    setSemesters(createSemesters(1))
+    setEntryMode("marks")
+    setSemesters(createSemesters(1, "marks"))
     setCalculation(null)
     showToast("All data has been reset", "info")
   }
@@ -189,17 +249,45 @@ export default function App() {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
         <div className="xl:col-span-2 space-y-8">
           <div className="surface-card p-6 sm:p-8">
-            <div className="mb-8">
-              <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
-                <div>
-                  <h2 className="text-2xl font-bold text-white mb-2 font-display">Academic Semesters</h2>
-                  <p className="text-slate-400">Use marks or grade-only entries for each subject.</p>
-                </div>
-                <div className="flex items-center glass-card rounded-lg p-1">
-                  <label htmlFor="semesterCount" className="font-semibold text-slate-300 ml-3 mr-3 text-sm uppercase tracking-wider">
-                    Semesters
-                  </label>
-                  <div className="flex items-center">
+            <div className="mb-8 border-b border-white/10 pb-6">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <h2 className="text-2xl font-bold text-white font-display">Academic Semesters</h2>
+
+                <div className="flex flex-wrap items-center gap-3">
+                  {/* Global Entry Mode Switcher */}
+                  <div className="flex items-center gap-2 bg-slate-800/60 border border-white/10 rounded-xl px-3 py-2">
+                    <span className="font-semibold text-slate-400 text-xs uppercase tracking-wider whitespace-nowrap pr-1 border-r border-white/10">Mode</span>
+                    <button
+                      type="button"
+                      onClick={() => handleEntryModeChange("marks")}
+                      className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-all duration-200 whitespace-nowrap ${
+                        entryMode === "marks"
+                          ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md"
+                          : "text-slate-400 hover:text-white hover:bg-white/5"
+                      }`}
+                    >
+                      <i className="fas fa-percentage" />
+                      By Marks
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleEntryModeChange("grade")}
+                      className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-all duration-200 whitespace-nowrap ${
+                        entryMode === "grade"
+                          ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md"
+                          : "text-slate-400 hover:text-white hover:bg-white/5"
+                      }`}
+                    >
+                      <i className="fas fa-graduation-cap" />
+                      By Grade
+                    </button>
+                  </div>
+
+                  {/* Semesters Count Input */}
+                  <div className="flex items-center gap-2 bg-slate-800/60 border border-white/10 rounded-xl px-3 py-2">
+                    <label htmlFor="semesterCount" className="font-semibold text-slate-400 text-xs uppercase tracking-wider whitespace-nowrap pr-1 border-r border-white/10 cursor-pointer">
+                      Semesters
+                    </label>
                     <input
                       type="number"
                       id="semesterCount"
@@ -207,23 +295,21 @@ export default function App() {
                       max="8"
                       value={semesterCount}
                       onChange={(event) => setSemesterCount(event.target.value)}
-                      className="glass-input rounded-md px-3 py-2 w-16 text-center mr-1"
+                      className="w-10 text-center text-sm font-bold text-white bg-transparent focus:outline-none"
                     />
                     <button
                       type="button"
                       id="generateSem"
                       onClick={handleGenerateSemesters}
-                      className="gradient-bg text-white px-4 py-2 rounded-md transition-all hover:scale-105 active:scale-95 flex items-center font-medium"
+                      className="flex items-center gap-1.5 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-500 hover:to-indigo-600 text-white px-3 py-1.5 rounded-lg font-bold text-xs uppercase tracking-wider transition-colors duration-200 shadow-md border border-blue-400/20 whitespace-nowrap"
                     >
-                      <i className="fas fa-layer-group mr-2" />
+                      <i className="fas fa-layer-group" />
                       Set
                     </button>
                   </div>
                 </div>
               </div>
             </div>
-
-            <GradingReference />
 
             <form id="cgpaForm" className="mt-8">
               <div id="semestersContainer" className="space-y-8">
@@ -277,12 +363,22 @@ export default function App() {
       </footer>
 
       {/* Toast Notification */}
-      <div className={`fixed bottom-6 right-6 z-50 transition-all duration-300 transform ${toast.show ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-10 opacity-0 scale-95 pointer-events-none'}`}>
+      <div className={`fixed bottom-6 right-6 z-50 transition-all duration-300 transform max-w-sm sm:max-w-md ${toast.show ? 'translate-y-0 opacity-100 scale-100' : 'translate-y-10 opacity-0 scale-95 pointer-events-none'}`}>
         <div className={`glass-card px-6 py-4 rounded-xl flex items-center gap-3 shadow-2xl border ${
-          toast.type === "success" ? "border-emerald-500/30 bg-emerald-950/40" : "border-blue-500/30 bg-blue-950/40"
+          toast.type === "success"
+            ? "border-emerald-500/30 bg-emerald-950/40"
+            : toast.type === "error"
+            ? "border-rose-500/30 bg-rose-950/40"
+            : "border-blue-500/30 bg-blue-950/40"
         }`}>
-          <i className={`fas ${toast.type === "success" ? "fa-check-circle text-emerald-400" : "fa-info-circle text-blue-400"} text-xl`}></i>
-          <span className="text-white font-medium">{toast.message}</span>
+          <i className={`fas ${
+            toast.type === "success"
+              ? "fa-check-circle text-emerald-400"
+              : toast.type === "error"
+              ? "fa-exclamation-circle text-rose-400"
+              : "fa-info-circle text-blue-400"
+          } text-xl shrink-0`}></i>
+          <span className="text-white font-medium text-sm sm:text-base leading-relaxed">{toast.message}</span>
         </div>
       </div>
     </main>

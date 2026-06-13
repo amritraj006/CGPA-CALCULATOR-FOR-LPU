@@ -56,7 +56,7 @@ export default function SemesterCard({
         </span>
       </div>
 
-      <div className="mb-8 flex flex-col gap-4 rounded-xl glass-card p-4 md:flex-row md:items-center md:justify-between border border-white/5">
+      <div className="mb-8 flex flex-col gap-4 rounded-xl glass-card p-4 sm:flex-row sm:items-center sm:justify-between border border-white/5">
         <div>
           <label className="text-xs font-bold tracking-widest uppercase text-blue-400">Subjects Setup</label>
           <p className="text-sm text-slate-400 mt-1">Configure 1 to 10 subjects</p>
@@ -68,12 +68,12 @@ export default function SemesterCard({
             max="10"
             value={semester.subjectCount}
             onChange={(event) => onSubjectCountChange(semester.id, event.target.value)}
-            className="glass-input w-20 rounded-l-lg px-4 py-2.5 text-center text-lg mr-1 font-semibold"
+            className="glass-input w-16 rounded-l-xl px-3 py-2.5 text-center text-lg font-semibold border-r-0"
           />
           <button
             type="button"
             onClick={() => onGenerateSubjects(semester.id)}
-            className="gradient-bg-3 rounded-r-lg px-6 py-2.5 font-bold text-white transition-all hover:scale-105 active:scale-95"
+            className="gradient-bg-3 rounded-r-xl px-5 py-2.5 font-bold text-white transition-all hover:scale-105 active:scale-95 flex items-center shrink-0"
           >
             <i className="fas fa-magic mr-2" />
             Apply
@@ -102,38 +102,13 @@ export default function SemesterCard({
                     placeholder="Enter subject name"
                     value={subject.name}
                     onChange={(event) => onSubjectChange(semester.id, subject.id, "name", event.target.value)}
-                    className="glass-input w-full rounded-lg px-4 py-2.5 text-lg font-medium xl:max-w-md"
+                    className="glass-input w-full rounded-lg px-4 py-2.5 text-lg font-medium xl:max-w-2xl"
                     aria-label={`Semester ${semesterIndex + 1} subject ${subjectIndex + 1} name`}
                   />
                 </div>
-
-                <div className="inline-flex w-fit rounded-lg bg-slate-900/50 p-1.5 ring-1 ring-white/10 shrink-0 mt-4 xl:mt-0">
-                  <button
-                    type="button"
-                    onClick={() => onSubjectChange(semester.id, subject.id, "entryMode", "marks")}
-                    className={`rounded-md px-5 py-2 text-sm font-bold transition-all ${
-                      subject.entryMode !== "grade"
-                        ? "bg-slate-700 text-white shadow-md ring-1 ring-white/20"
-                        : "text-slate-400 hover:text-white hover:bg-white/5"
-                    }`}
-                  >
-                    Marks
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => onSubjectChange(semester.id, subject.id, "entryMode", "grade")}
-                    className={`rounded-md px-5 py-2 text-sm font-bold transition-all ${
-                      subject.entryMode === "grade"
-                        ? "bg-slate-700 text-white shadow-md ring-1 ring-white/20"
-                        : "text-slate-400 hover:text-white hover:bg-white/5"
-                    }`}
-                  >
-                    Grade
-                  </button>
-                </div>
               </div>
 
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-[minmax(8rem,0.7fr)_minmax(12rem,1fr)_minmax(8rem,0.7fr)]">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 lg:gap-6">
                 <div>
                   <label className="text-xs font-bold tracking-widest text-slate-400 uppercase mb-2 block">Credits</label>
                   <input
@@ -149,21 +124,26 @@ export default function SemesterCard({
 
                 <div>
                   <label className="text-xs font-bold tracking-widest text-slate-400 uppercase mb-2 block">
-                    {subject.entryMode === "grade" ? "Letter Grade" : "Marks (0-100)"}
+                    {subject.entryMode === "grade" ? "Expected Grade" : "Marks (0-100)"}
                   </label>
                   {subject.entryMode === "grade" ? (
-                    <select
-                      value={subject.grade}
-                      onChange={(event) => onSubjectChange(semester.id, subject.id, "grade", event.target.value)}
-                      className="glass-input w-full rounded-lg px-4 py-3 text-lg font-medium appearance-none bg-slate-800"
-                    >
-                      <option value="">Select...</option>
-                      {gradeOptions.map((grade) => (
-                        <option key={grade.letter} value={grade.letter}>
-                          {grade.letter} ({grade.points} pts)
-                        </option>
-                      ))}
-                    </select>
+                    <div className="relative">
+                      <select
+                        value={subject.grade}
+                        onChange={(event) => onSubjectChange(semester.id, subject.id, "grade", event.target.value)}
+                        className="glass-input w-full rounded-lg pl-4 pr-10 py-3 text-lg font-medium appearance-none bg-slate-800"
+                      >
+                        <option value="">Select...</option>
+                        {gradeOptions.map((grade) => (
+                          <option key={grade.letter} value={grade.letter}>
+                            {grade.letter} ({grade.points} pts)
+                          </option>
+                        ))}
+                      </select>
+                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400">
+                        <i className="fas fa-chevron-down text-sm" />
+                      </div>
+                    </div>
                   ) : (
                     <input
                       type="number"
