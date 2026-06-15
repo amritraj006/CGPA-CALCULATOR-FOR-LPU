@@ -1,8 +1,6 @@
 import {
-  getGradeDisplayClasses,
   getGradeInfoFromGrade,
   getSubjectGradeData,
-  getTgpaBadgeClasses,
   gradeOptions,
 } from "../utils/grades"
 
@@ -112,12 +110,16 @@ export default function SemesterCard({
                 <div>
                   <label className="text-xs font-bold tracking-widest text-slate-400 uppercase mb-2 block">Credits</label>
                   <input
-                    type="number"
-                    min="1"
-                    max="10"
+                    type="text"
+                    inputMode="decimal"
                     placeholder="E.g. 4"
                     value={subject.credits}
-                    onChange={(event) => onSubjectChange(semester.id, subject.id, "credits", event.target.value)}
+                    onChange={(event) => {
+                      const val = event.target.value
+                      if (val === "" || /^\d*\.?\d*$/.test(val)) {
+                        onSubjectChange(semester.id, subject.id, "credits", val)
+                      }
+                    }}
                     className="glass-input w-full rounded-lg px-4 py-3 text-lg font-medium"
                   />
                 </div>
@@ -146,12 +148,16 @@ export default function SemesterCard({
                     </div>
                   ) : (
                     <input
-                      type="number"
-                      min="0"
-                      max="100"
+                      type="text"
+                      inputMode="decimal"
                       placeholder="E.g. 85"
                       value={subject.marks}
-                      onChange={(event) => onSubjectChange(semester.id, subject.id, "marks", event.target.value)}
+                      onChange={(event) => {
+                        const val = event.target.value
+                        if (val === "" || /^\d*\.?\d*$/.test(val)) {
+                          onSubjectChange(semester.id, subject.id, "marks", val)
+                        }
+                      }}
                       className="glass-input w-full rounded-lg px-4 py-3 text-lg font-medium"
                     />
                   )}
