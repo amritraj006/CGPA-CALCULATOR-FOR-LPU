@@ -9,7 +9,7 @@ export default function Results({ calculation }) {
             <i className="fas fa-calculator text-4xl text-slate-500" />
           </div>
           <h3 className="text-xl font-bold text-white mb-2 font-display">Ready to Calculate</h3>
-          <p className="text-slate-400">Enter marks or grades and click "Calculate CGPA" to see your academic standing.</p>
+          <p className="text-slate-400">Enter credits and expected grades, then click "Calculate CGPA" to estimate your result.</p>
         </div>
       </div>
     )
@@ -101,7 +101,7 @@ export default function Results({ calculation }) {
           <div className="inline-flex flex-col items-center p-6 bg-amber-500/10 border border-amber-500/20 rounded-2xl">
             <i className="fas fa-exclamation-circle text-amber-400 text-4xl mb-4 shadow-sm" />
             <p className="text-amber-200 font-medium">
-              Please enter marks and credits for at least one subject to see detailed results.
+              Please enter credits and expected grades for at least one subject to see detailed results.
             </p>
           </div>
         </div>

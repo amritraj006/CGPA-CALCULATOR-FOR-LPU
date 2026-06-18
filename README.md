@@ -7,8 +7,9 @@ A modern, high-performance, and visually stunning Academic GPA Console tailored 
 ## ✨ Features
 
 - **Dual Entry Modes**:
-  - **By Marks (0–100)**: Automatically computes grade letters and grade points according to LPU's standard mapping.
-  - **By Grade**: Allows direct entry of expected letter grades (O, A+, A, B+, B, C, D, E).
+  - **By Marks (0-100)**: Estimate grade points from marks when you want a quick marks-based calculation.
+  - **By Grade**: Estimate TGPA/CGPA from expected LPU letter grades, which best matches LPU's relative grading system.
+  - **LPU Grade Points**: Supports O, A+, A, B+, B, C, D, E, F, G, and I with the official 10/9/8/7/6/5/4/0 point mapping.
 - **Dynamic Semesters & Subjects**: Configure and generate up to 8 semesters and 1 to 10 subjects per semester dynamically.
 - **Robust Custom Inputs**: Features custom text-based inputs with `inputMode="decimal"` to prevent annoying browser-native behaviors, such as unexpected value changes from scroll wheels, arrow keys, or native validation snapping to `1`.
 - **Interactive Analytics Panels** (Chart.js):
@@ -17,6 +18,16 @@ A modern, high-performance, and visually stunning Academic GPA Console tailored 
 - **Academic Summary Dashboard**: Tracks real-time statistics including *Total Credits*, *Total Subjects*, *Highest TGPA*, and *Lowest TGPA*.
 - **Premium Glassmorphism Design**: High-fidelity dark mode with dynamic, floating backdrop glowing blobs and micro-animations.
 - **Toast Alerts**: Built-in sleek toast notification console for calculations and errors.
+
+## Calculation Notes
+
+TGPA and CGPA are calculated from credit-weighted grade points:
+
+```text
+sum(grade point x subject credit) / sum(subject credit)
+```
+
+CGPA is calculated across all subjects and credits entered so far. It is not the average of semester TGPAs.
 
 ---
 

@@ -226,7 +226,7 @@ export default function App() {
             </span>
             <h1 className="text-3xl font-bold text-white md:text-5xl font-display tracking-tight mb-2">LPU TGPA/CGPA Calculator</h1>
             <p className="max-w-2xl text-slate-400 text-lg">
-              Calculate semester TGPA and overall CGPA using marks or direct grade entry.
+              Calculate TGPA and CGPA using marks or expected grades with LPU's credit-weighted formula.
             </p>
           </div>
           <div className="grid grid-cols-3 gap-3 md:gap-4 text-center">
@@ -359,7 +359,7 @@ export default function App() {
       </div>
 
       <footer className="mt-12 mb-8 text-center text-sm text-slate-500 font-medium">
-        <p>CGPA Calculator v4.0 | LPU Standards | 10-point scale</p>
+        <p>CGPA Calculator v4.0 | LPU relative grading | CGPA is credit-weighted, not an average of TGPAs</p>
       </footer>
 
       {/* Toast Notification */}

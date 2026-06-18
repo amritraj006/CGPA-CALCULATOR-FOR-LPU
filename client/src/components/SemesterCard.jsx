@@ -126,7 +126,7 @@ export default function SemesterCard({
 
                 <div>
                   <label className="text-xs font-bold tracking-widest text-slate-400 uppercase mb-2 block">
-                    {subject.entryMode === "grade" ? "Expected Grade" : "Marks (0-100)"}
+                    {subject.entryMode === "grade" ? "Expected Grade" : "Estimated Marks"}
                   </label>
                   {subject.entryMode === "grade" ? (
                     <div className="relative">
@@ -138,7 +138,7 @@ export default function SemesterCard({
                         <option value="">Select...</option>
                         {gradeOptions.map((grade) => (
                           <option key={grade.letter} value={grade.letter}>
-                            {grade.letter} ({grade.points} pts)
+                            {grade.letter} - {grade.label} ({grade.points} pts)
                           </option>
                         ))}
                       </select>

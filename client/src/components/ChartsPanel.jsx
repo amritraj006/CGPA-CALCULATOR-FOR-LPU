@@ -94,7 +94,7 @@ export default function ChartsPanel({ calculation }) {
         labels: gradeChartLabels,
         datasets: [
           {
-            data: new Array(8).fill(0),
+            data: new Array(gradeLetters.length).fill(0),
             backgroundColor: gradeChartColors,
             borderWidth: 2,
             borderColor: "#0f172a", // slate-900 to blend with background
